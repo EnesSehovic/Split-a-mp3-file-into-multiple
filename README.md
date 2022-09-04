@@ -1,3 +1,4 @@
+Simple script to separate a mp3 file into multiple using Python.
 You need to have a list that contains song names and timestamps, including the ending timestamp ie:
 
 songs = [
