@@ -1,0 +1,50 @@
+songs = [
+	'Song 1', '0:00:00',
+	'Song 2', '0:02:44',
+	'Song 3', '0:06:59',
+	'Song 4', '0:09:12',
+	'End', '0:12:19',
+]
+
+# Separate names and timestamps
+name = []
+start = []
+for i in range(len(songs)):
+    if i % 2 == 0:
+        name.append(songs[i])
+    else:
+        start.append(songs[i])
+
+# Convert timestamps into miliseconds
+def convert(timestamp):
+    hours, *rest = timestamp.split(':')
+    minutes = rest[0]
+    seconds = rest[1]
+    hours, minutes, seconds = map(int, (hours, minutes, seconds))
+    return (hours * 3600 + minutes * 60 + seconds) * 1000
+
+startInMilSec = []
+for i in range(len(start)):
+    startInMilSec.append(convert(start[i]))
+
+# Actual spliting
+from pydub import AudioSegment
+import os
+
+if not os.path.exists('C:\\Users\\User\\Desktop\\BigSong'):
+    os.makedirs('C:\\Users\\User\\Desktop\\BigSong')
+    
+pathToSong = 'C:\\Users\\User\\Desktop\\BigSong.mp3'
+sound = AudioSegment.from_mp3(pathToSong)
+
+try:
+    for i in range(len(name)):
+        # Creating a two second silence segment between the songs
+        twoSecSilence = AudioSegment.silent(duration=2000)
+        a = startInMilSec[i]
+        b = startInMilSec[i+1]
+        individual = sound[a:b]
+        ind1 = individual[:1000] + twoSecSilence + individual[1000:]
+        ind1.export(f'C:\\Users\\User\\Desktop\\BigSong\\{name[i]}.mp3')
+except IndexError:
+    pass
